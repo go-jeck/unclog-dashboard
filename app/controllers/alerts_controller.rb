@@ -24,7 +24,19 @@ class AlertsController < ApplicationController
   # POST /alerts
   # POST /alerts.json
   def create
-    @alert = Alert.new(alert_params)
+    receivers = params['receiver']
+    callback =  Hash.new
+    callback["type"] = "email"
+    callback["receivers"] = receivers
+
+    logger.debug(callback)
+
+    @alert = Alert.new()
+    @alert.app_name = params['app_name']
+    @alert.log_level = params['log_level']
+    @alert.duration = params['duration']
+    @alert.limit = params['limit']
+    @alert.callback = callback
 
     @alert.save
     redirect_to @alert
