@@ -1,24 +1,21 @@
-# README
+# UNCLOG DASHBOARD 
+Anclog Dashboard is web application to visualize the aggregated data form
+[Unclog Worker](https://github.com/go-squads/unclog-worker).
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+##Dependencies
+- [Rails](https://github.com/rails/rails) v5.2.0
+- [ChartJS for Rails](https://github.com/airblade/chartjs-ror)
+- Postgresql
 
-Things you may want to cover:
+##Installation
+Make sure that you had installed Ruby, Rails, and Postgresql. Then, create your
+database and set your database name on ```config/database.yml```
 
-* Ruby version
+We don't create database migrator for this project. The data base migrator located
+in the Unclog Worker. We choose this to avoid ambiguity.
 
-* System dependencies
+##Running
+To run this project, execute this command ```rails s``` with default port 3000.
+If you want to change the port, execute this command ```rails s -p <PORT>```
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+##Testing

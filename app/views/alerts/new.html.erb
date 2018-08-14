@@ -1,0 +1,22 @@
+<h1>New Alert</h1>
+
+<%= form_tag :action => 'create' do%>
+  <label for="app_name"> Application Name </label>
+  <%= text_field '', 'app_name' %>
+
+  <label for="log_level"> Log Level </label>
+  <%= text_field '', 'log_level' %>
+
+  <label for="duration"> Duration </label>
+  <%= text_field '', 'duration' %>
+
+  <label for="limit"> Limit </label>
+  <%= text_field '', 'limit' %>
+
+  <label for="callback"> Callback </label>
+  <%= text_field '', 'callback' %>
+
+  <%= submit_tag 'Create' %>
+
+<% end -%>
+<%= link_to 'Back', alerts_path %>
