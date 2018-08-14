@@ -12,6 +12,11 @@
   <tbody>
     <% @alerts.each do |alert| %>
       <tr>
+        <td><%= alert.app_name %> </td>
+        <td><%= alert.log_level %> </td>
+        <td><%= alert.duration %> </td>
+        <td><%= alert.limit %> </td>
+        <td><%= alert.callback %> </td>
         <td><%= link_to 'Show', alert %></td>
         <td><%= link_to 'Edit', edit_alert_path(alert) %></td>
         <td><%= link_to 'Destroy', alert, method: :delete, data: { confirm: 'Are you sure?' } %></td>

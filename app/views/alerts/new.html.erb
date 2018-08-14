@@ -2,19 +2,21 @@
 
 <%= form_tag :action => 'create' do%>
   <label for="app_name"> Application Name </label>
-  <%= text_field '', 'app_name' %>
+  <%= text_field 'alert', 'app_name' %>
 
   <label for="log_level"> Log Level </label>
-  <%= text_field '', 'log_level' %>
+  <%= select 'alert', 'log_level', [['Error', 'error'], ['Debug', 'debug'],
+                                    ['Fatal', 'fatal'], ['Info', 'info'],
+                                    ['Trace', 'trace'], ['Warn', 'warn']] %>
 
   <label for="duration"> Duration </label>
-  <%= text_field '', 'duration' %>
+  <%= text_field 'alert', 'duration' %>
 
   <label for="limit"> Limit </label>
-  <%= text_field '', 'limit' %>
+  <%= text_field 'alert', 'limit' %>
 
   <label for="callback"> Callback </label>
-  <%= text_field '', 'callback' %>
+  <%= text_field 'alert', 'callback' %>
 
   <%= submit_tag 'Create' %>
 

@@ -26,16 +26,6 @@ class AlertsController < ApplicationController
   def create
     @alert = Alert.new(alert_params)
 
-    # respond_to do |format|
-    #   if @alert.save
-    #     format.html { redirect_to @alert, notice: 'Alert was successfully created.' }
-    #     format.json { render :show, status: :created, location: @alert }
-    #   else
-    #     format.html { render :new }
-    #     format.json { render json: @alert.errors, status: :unprocessable_entity }
-    #   end
-    # end
-    puts @alert.inspect
     @alert.save
     redirect_to @alert
   end
@@ -72,6 +62,6 @@ class AlertsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def alert_params
-      params.fetch(:alert, {})
+      params.require(:alert).permit(:app_name, :log_level, :duration, :limit, :callback)
     end
 end
