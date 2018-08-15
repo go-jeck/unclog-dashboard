@@ -1,6 +1,6 @@
 <h1>New Alert</h1>
 
-<%= form_tag :action => 'create' do%>
+<%= form_tag :action => 'create' do %>
   <label for="app_name"> Application Name </label>
   <%= text_field '', 'app_name' %>
 
@@ -16,10 +16,12 @@
   <%= text_field '', 'limit' %>
 
   <label for="callback"> Callback </label>
-  <%= select 'alert', 'callback', [['Email', 'email']], include_blank: true %>
+  <%= select '', 'callback', [['Email', 'email'],
+                                   ['Slack', 'slack']], include_blank: true %>
 
-  <div id="add_button" style="display: none"> Add receiver </div>
-  <div id="callback_form"> </div>
+  <div id="add_email_receiver" style="display: none"> Add Receiver</div>
+  <div id="add_slack_webhook" style="display: none"> Add Webhook</div>
+  <div id="callback_form"></div>
 
   <%= submit_tag 'Create' %>
 
