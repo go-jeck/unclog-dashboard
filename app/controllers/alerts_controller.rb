@@ -26,7 +26,7 @@ class AlertsController < ApplicationController
   def create
     receivers = params['receiver']
     callback =  Hash.new
-    callback["type"] = "email"
+    callback["type"] = params['callback']
     callback["receivers"] = receivers
 
     logger.debug(callback)
