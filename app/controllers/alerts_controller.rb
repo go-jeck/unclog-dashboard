@@ -36,7 +36,7 @@ class AlertsController < ApplicationController
     @alert.log_level = params['log_level']
     @alert.duration = params['duration']
     @alert.limit = params['limit']
-    @alert.callback = callback
+    @alert.callback = callback.to_json
 
     @alert.save
     redirect_to @alert
