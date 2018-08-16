@@ -39,7 +39,7 @@ class AlertsController < ApplicationController
     @alert.callback = callback.to_json
 
     @alert.save
-    redirect_to @alert
+    redirect_to alerts_path
   end
 
   # PATCH/PUT /alerts/1
