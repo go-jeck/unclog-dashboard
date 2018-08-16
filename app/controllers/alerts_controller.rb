@@ -32,8 +32,8 @@ class AlertsController < ApplicationController
     logger.debug(callback)
 
     @alert = Alert.new()
-    @alert.app_name = params['app_name']
-    @alert.log_level = params['log_level']
+    @alert.app_name = params['app_name'].downcase
+    @alert.log_level = params['log_level'].downcase
     @alert.duration = params['duration']
     @alert.limit = params['limit']
     @alert.callback = callback.to_json
