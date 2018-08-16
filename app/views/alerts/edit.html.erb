@@ -1,6 +1,46 @@
 <h1>Editing Alert</h1>
 
-<%= render 'form', alert: @alert %>
+<%= form_tag alert_path, :method => :put, :id => @alert.id do %>
+  <label for="app_name"> Application Name </label>
+  <%= text_field '', 'app_name', :value => @alert.app_name %>
+
+  <label for="log_level"> Log Level </label>
+  <%= select '', 'log_level', [['Error', 'error'], ['Debug', 'debug'],
+                               ['Fatal', 'fatal'], ['Info', 'info'],
+                               ['Trace', 'trace'], ['Warn', 'warn']],
+             :selected => @alert.log_level %>
+
+  <label for="duration"> Duration </label>
+  <%= text_field '', 'duration', :value => @alert.duration %>
+
+  <label for="limit"> Limit </label>
+  <%= text_field '', 'limit', :value => @alert.limit %>
+
+  <label for="callback"> Callback </label>
+  <%= select '', 'callback', [['Email', 'email'],
+                              ['Slack', 'slack']], include_blank: true,
+             :selected => JSON.parse(@alert.callback)["type"] %>
+
+  <% if JSON.parse(@alert.callback)["type"] == "email" %>
+    <div id="add_email_receiver" style="display: block"> Add Receiver</div>
+    <div id="add_slack_webhook" style="display: none"> Add Webhook</div>
+  <% elsif JSON.parse(@alert.callback)["type"] == "slack" %>
+    <div id="add_email_receiver" style="display: none"> Add Receiver</div>
+    <div id="add_slack_webhook" style="display: block"> Add Webhook</div>
+  <% end %>
+
+  <div id="callback_form">
+    <% JSON.parse(@alert.callback)["receivers"].each_with_index do |item, idx| %>
+      <%= content_tag :div, :id => "inputGroup"+idx.to_s do %>
+         <%= text_field '', 'receiver[]', :value => item %>
+         <%= content_tag :div, 'Delete', :type => "reset", :onclick => "deleteReceiver(\"inputGroup#{idx.to_s}\")" %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= submit_tag 'Update' %>
+
+<% end -%>
 
 <%= link_to 'Show', @alert %> |
 <%= link_to 'Back', alerts_path %>
