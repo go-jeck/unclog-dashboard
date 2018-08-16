@@ -10,6 +10,7 @@ class AlertsController < ApplicationController
   # GET /alerts/1
   # GET /alerts/1.json
   def show
+    @alert = Alert.find(params[:id])
   end
 
   # GET /alerts/new
@@ -29,8 +30,6 @@ class AlertsController < ApplicationController
     callback["type"] = params['callback']
     callback["receivers"] = receivers
 
-    logger.debug(callback)
-
     @alert = Alert.new()
     @alert.app_name = params['app_name'].downcase
     @alert.log_level = params['log_level'].downcase
@@ -45,15 +44,21 @@ class AlertsController < ApplicationController
   # PATCH/PUT /alerts/1
   # PATCH/PUT /alerts/1.json
   def update
-    respond_to do |format|
-      if @alert.update(alert_params)
-        format.html { redirect_to @alert, notice: 'Alert was successfully updated.' }
-        format.json { render :show, status: :ok, location: @alert }
-      else
-        format.html { render :edit }
-        format.json { render json: @alert.errors, status: :unprocessable_entity }
-      end
-    end
+    @alert = Alert.find(params[:id])
+
+    receivers = params['receiver']
+    callback =  Hash.new
+    callback["type"] = params['callback']
+    callback["receivers"] = receivers
+
+    @alert.app_name = params['app_name'].downcase
+    @alert.log_level = params['log_level'].downcase
+    @alert.duration = params['duration']
+    @alert.limit = params['limit']
+    @alert.callback = callback.to_json
+
+    @alert.save
+    redirect_to alerts_path
   end
 
   # DELETE /alerts/1
