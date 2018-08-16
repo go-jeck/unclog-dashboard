@@ -3,67 +3,90 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $(document).on 'turbolinks:load', ->
-  receiver_count = 0
 
   $('#callback').on 'change', (e) ->
+    slackButton = document.getElementById("add_slack_webhook")
+    emailButton = document.getElementById("add_email_receiver")
+    callbackForm = document.getElementById("callback_form")
+
     if e.target.value is 'email'
-      add_button = document.getElementById("add_email_receiver")
-      add_button.style.display = "block"
+      emailButton.style.display = "block"
+      slackButton.style.display = "none"
+      clearFormGroup()
+      createEmailForm()
     else if e.target.value is 'slack'
-      add_button = document.getElementById("add_slack_webhook")
-      add_button.style.display = "block"
+      slackButton.style.display = "block"
+      emailButton.style.display = "none"
+      clearFormGroup()
+      createSlackForm()
     else
-      console.log("nothing")
+      emailButton.style.display = "none"
+      slackButton.style.display = "none"
+      clearFormGroup()
+
 
   $('#add_email_receiver').on 'click', (e) ->
-    callback_form = document.getElementById("callback_form")
-
-    receiver_input_group = document.createElement('div')
-    receiver_input_group.id = "input_group" + receiver_count
-
-    receiver_field = document.createElement('input')
-    receiver_field.placeholder = 'Receiver Email ' + receiver_count
-    receiver_field.id = "receiver_field_" + receiver_count
-    receiver_field.name = "receiver[]"
-
-    delete_button = document.createElement('div')
-    delete_button.innerText = '-'
-    delete_button.addEventListener('click', ->
-      delete_receiver(receiver_input_group.id)
-    )
-
-    receiver_count++
-
-    receiver_input_group.appendChild(receiver_field)
-    receiver_input_group.appendChild(delete_button)
-
-    callback_form.appendChild(receiver_input_group)
+    createEmailForm()
 
   $('#add_slack_webhook').on 'click', (e) ->
-    callback_form = document.getElementById("callback_form")
+    createSlackForm()
 
-    receiver_input_group = document.createElement('div')
-    receiver_input_group.id = "input_group" + receiver_count
+  @deleteReceiver = (id) ->
+    element = document.getElementById(id)
+    callbackForm = document.getElementById("callback_form")
+    callbackForm.removeChild(element)
 
-    receiver_field = document.createElement('input')
-    receiver_field.placeholder = 'Slack Webhook URL ' + receiver_count
-    receiver_field.id = "receiver_field_" + receiver_count
-    receiver_field.name = "receiver[]"
+  createEmailForm = () ->
+    callbackForm = document.getElementById("callback_form")
+    idx = callbackForm.childElementCount
 
-    delete_button = document.createElement('div')
-    delete_button.innerText = '-'
-    delete_button.addEventListener('click', ->
-      delete_receiver(receiver_input_group.id)
+    receiverInputGroup = document.createElement('div')
+    receiverInputGroup.id = "inputGroup" + idx
+
+    receiverField = document.createElement('input')
+    receiverField.placeholder = 'Receiver Email ' + idx
+    receiverField.id = "receiverField_" + idx
+    receiverField.name = "receiver[]"
+
+    deleteButton = document.createElement('div')
+    deleteButton.innerText = 'Delete'
+    deleteButton.addEventListener('click', ->
+      element = document.getElementById(receiverInputGroup.id)
+      callbackForm = document.getElementById("callback_form")
+      callbackForm.removeChild(element)
     )
 
-    receiver_count++
+    receiverInputGroup.appendChild(receiverField)
+    receiverInputGroup.appendChild(deleteButton)
 
-    receiver_input_group.appendChild(receiver_field)
-    receiver_input_group.appendChild(delete_button)
+    callbackForm.appendChild(receiverInputGroup)
 
-    callback_form.appendChild(receiver_input_group)
+  createSlackForm = () ->
+    callbackForm = document.getElementById("callback_form")
+    idx = callbackForm.childElementCount
 
-  delete_receiver = (id) ->
-    element = document.getElementById(id)
-    callback_form = document.getElementById("callback_form")
-    callback_form.removeChild(element)
+    receiverInputGroup = document.createElement('div')
+    receiverInputGroup.id = "inputGroup" + idx
+
+    receiverField = document.createElement('input')
+    receiverField.placeholder = 'Slack Webhook URL ' + idx
+    receiverField.id = "receiverField_" + idx
+    receiverField.name = "receiver[]"
+
+    deleteButton = document.createElement('div')
+    deleteButton.innerText = 'Delete'
+    deleteButton.addEventListener('click', ->
+      element = document.getElementById(receiverInputGroup.id)
+      callbackForm = document.getElementById("callback_form")
+      callbackForm.removeChild(element)
+    )
+
+    receiverInputGroup.appendChild(receiverField)
+    receiverInputGroup.appendChild(deleteButton)
+
+    callbackForm.appendChild(receiverInputGroup)
+
+  clearFormGroup = () ->
+    callbackForm = document.getElementById("callback_form")
+    callbackForm.innerText = ""
+    receiverCount = 0
