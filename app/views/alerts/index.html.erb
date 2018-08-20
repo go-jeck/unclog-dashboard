@@ -2,39 +2,57 @@
 
 <h1>Alerts</h1>
 
-<%= link_to content_tag(:span, "", class: "glyphicon glyphicon-plus"), new_alert_path, class: "btn btn-success", type: "button" %>
-
 <%= link_to new_alert_path do %>
-  <button class="btn btn-success" aria-label="vote up"><span class="glyphicon glyphicon-plus"></span></button>
+  <button class="btn btn-success " aria-label="vote up">
+    <span class="glyphicon glyphicon-plus"></span> New Alert
+  </button>
 <% end %>
 
 <table class="table">
-  <thead class="thead-dark text-center">
+    <thead class="thead-dark text-center">
     <tr>
-      <th>Application Name</th>
-      <th>Log Level</th>
-      <th>Duration</th>
-      <th>Limit</th>
-      <th colspan="2">Callback</th>
-      <th colspan="2">Action</th>
+      <th class="align-middle" >Application Name</th>
+      <th class="align-middle" >Log Level</th>
+      <th class="align-middle" >Duration</th>
+      <th class="align-middle" >Limit</th>
+      <th class="align-middle" colspan="2">Callback</th>
+      <th class="align-middle" colspan="2">Action</th>
     </tr>
-  </thead>
-
+    </thead>
   <tbody>
-    <% @alerts.each do |alert| %>
-      <tr>
-        <td><%= alert.app_name %> </td>
-        <td><%= alert.log_level %> </td>
-        <td><%= alert.duration %> </td>
-        <td><%= alert.limit %> </td>
-        <td><%= JSON.parse(alert.callback)["type"] %> </td>
-        <td><%  JSON.parse(alert.callback)["receivers"].each do |item|%>
-            <ul> <li class="text-truncate"> <%= item %> </li> </ul>
+  <% @alerts.each do |alert| %>
+    <tr>
+      <td class="align-middle"><%= alert.app_name %> </td>
+      <td class="align-middle"><%= alert.log_level %> </td>
+      <td class="align-middle"><%= alert.duration %> </td>
+      <td class="align-middle"><%= alert.limit %> </td>
+      <td class="align-middle"><%= JSON.parse(alert.callback)["type"] %> </td>
+      <td class="align-middle" >
+        <% JSON.parse(alert.callback)["receivers"].each do |item| %>
+          <ul>
+            <li class="text-truncate"> <%= item %> </li>
+          </ul>
         <% end %> </td>
-        <td><%= link_to 'Edit', edit_alert_path(alert) %></td>
-        <td><%= link_to 'Destroy', alert, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
+
+      <td class="align-middle" >
+        <%#= link_to 'Edit', edit_alert_path(alert) %>
+        <%= link_to edit_alert_path(alert) do %>
+          <button class="btn btn-primary" aria-label="vote up">
+            <span class="glyphicon glyphicon-pencil"></span> Edit
+          </button>
+        <% end %>
+      </td>
+
+      <td class="align-middle" >
+        <%= link_to alert, method: :delete, data: {confirm: 'Are you sure?'} do %>
+          <button class="btn btn-danger" aria-label="vote up">
+            <span class="glyphicon glyphicon-trash"></span> Destroy
+          </button>
+        <% end %>
+      </td>
+
+    </tr>
+  <% end %>
   </tbody>
 </table>
 
