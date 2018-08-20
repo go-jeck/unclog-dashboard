@@ -68,7 +68,8 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'chartjs-ror'
 
 # Bootstrap 4
-gem 'bootstrap', '~> 4.1.3'
+gem 'bootstrap'
+gem 'bootstrap-glyphicons'
 
 # JQuery
 gem 'jquery-rails'
