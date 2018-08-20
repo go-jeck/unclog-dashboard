@@ -2,12 +2,14 @@
 
 <h1>Alerts</h1>
 
-<%= link_to 'New Alert', new_alert_path %>
+<%= link_to content_tag(:span, "", class: "glyphicon glyphicon-plus"), new_alert_path, class: "btn btn-success", type: "button" %>
 
-<br>
+<%= link_to new_alert_path do %>
+  <button class="btn btn-success" aria-label="vote up"><span class="glyphicon glyphicon-plus"></span></button>
+<% end %>
 
-<table border="1">
-  <thead>
+<table class="table">
+  <thead class="thead-dark text-center">
     <tr>
       <th>Application Name</th>
       <th>Log Level</th>
@@ -26,7 +28,9 @@
         <td><%= alert.duration %> </td>
         <td><%= alert.limit %> </td>
         <td><%= JSON.parse(alert.callback)["type"] %> </td>
-        <td><%  JSON.parse(alert.callback)["receivers"].each do |item|%> <li> <%= item %> </li>  <% end %> </td>
+        <td><%  JSON.parse(alert.callback)["receivers"].each do |item|%>
+            <ul> <li class="text-truncate"> <%= item %> </li> </ul>
+        <% end %> </td>
         <td><%= link_to 'Edit', edit_alert_path(alert) %></td>
         <td><%= link_to 'Destroy', alert, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
