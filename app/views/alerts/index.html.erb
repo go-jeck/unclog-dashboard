@@ -14,7 +14,7 @@
       <th>Duration</th>
       <th>Limit</th>
       <th colspan="2">Callback</th>
-      <th colspan="3">Action</th>
+      <th colspan="2">Action</th>
     </tr>
   </thead>
 
@@ -27,7 +27,6 @@
         <td><%= alert.limit %> </td>
         <td><%= JSON.parse(alert.callback)["type"] %> </td>
         <td><%  JSON.parse(alert.callback)["receivers"].each do |item|%> <li> <%= item %> </li>  <% end %> </td>
-        <td><%= link_to 'Show', alert %></td>
         <td><%= link_to 'Edit', edit_alert_path(alert) %></td>
         <td><%= link_to 'Destroy', alert, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
