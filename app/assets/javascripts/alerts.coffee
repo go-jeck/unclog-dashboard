@@ -44,12 +44,15 @@ $(document).on 'turbolinks:load', ->
     receiverInputGroup.id = "inputGroup" + idx
 
     receiverField = document.createElement('input')
-    receiverField.placeholder = 'Receiver Email ' + idx
+    receiverField.placeholder = 'Receiver Email'
     receiverField.id = "receiverField_" + idx
     receiverField.name = "receiver[]"
+    receiverField.required = true
+    receiverField.type = "email"
 
-    deleteButton = document.createElement('div')
+    deleteButton = document.createElement('span')
     deleteButton.innerText = 'Delete'
+    deleteButton.className = 'btn btn-danger'
     deleteButton.addEventListener('click', ->
       element = document.getElementById(receiverInputGroup.id)
       callbackForm = document.getElementById("callback_form")
@@ -69,12 +72,14 @@ $(document).on 'turbolinks:load', ->
     receiverInputGroup.id = "inputGroup" + idx
 
     receiverField = document.createElement('input')
-    receiverField.placeholder = 'Slack Webhook URL ' + idx
+    receiverField.placeholder = 'Slack Webhook URL'
     receiverField.id = "receiverField_" + idx
     receiverField.name = "receiver[]"
+    receiverField.required = true
 
     deleteButton = document.createElement('div')
     deleteButton.innerText = 'Delete'
+    deleteButton.className = 'btn btn-danger'
     deleteButton.addEventListener('click', ->
       element = document.getElementById(receiverInputGroup.id)
       callbackForm = document.getElementById("callback_form")

@@ -10,7 +10,6 @@ class AlertsController < ApplicationController
   # GET /alerts/1
   # GET /alerts/1.json
   def show
-    @alert = Alert.find(params[:id])
   end
 
   # GET /alerts/new
@@ -20,6 +19,15 @@ class AlertsController < ApplicationController
 
   # GET /alerts/1/edit
   def edit
+    logger.info ("Asdasd")
+    @alert = Alert.find(params[:id])
+
+    duration = @alert.duration.to_i
+    @hour = duration / 3600
+    duration = duration % 3600
+    @minute = duration / 60
+    duration = duration % 60
+    @second = duration
   end
 
   # POST /alerts
@@ -33,7 +41,7 @@ class AlertsController < ApplicationController
     @alert = Alert.new()
     @alert.app_name = params['app_name'].downcase
     @alert.log_level = params['log_level'].downcase
-    @alert.duration = params['duration']
+    @alert.duration = (params['hour'].to_i * 3600) + (params['minute'].to_i * 60) + params['second'].to_i
     @alert.limit = params['limit']
     @alert.callback = callback.to_json
 
@@ -53,7 +61,7 @@ class AlertsController < ApplicationController
 
     @alert.app_name = params['app_name'].downcase
     @alert.log_level = params['log_level'].downcase
-    @alert.duration = params['duration']
+    @alert.duration = (params['hour'].to_i * 3600) + (params['minute'].to_i * 60) + params['second'].to_i
     @alert.limit = params['limit']
     @alert.callback = callback.to_json
 
