@@ -2,23 +2,21 @@
 
 <h1>Alerts</h1>
 
-<%= link_to new_alert_path do %>
-  <button class="btn btn-success " aria-label="vote up">
-    <span class="glyphicon glyphicon-plus"></span> New Alert
-  </button>
-<% end %>
+<button class="btn btn-success " data-toggle="modal" data-target="#exampleModal" aria-label="vote up">
+  <span class="glyphicon glyphicon-plus"></span> New Alert
+</button>
 
 <table class="table">
-    <thead class="thead-dark text-center">
-    <tr>
-      <th class="align-middle" >Application Name</th>
-      <th class="align-middle" >Log Level</th>
-      <th class="align-middle" >Duration</th>
-      <th class="align-middle" >Limit</th>
-      <th class="align-middle" colspan="2">Callback</th>
-      <th class="align-middle" colspan="2">Action</th>
-    </tr>
-    </thead>
+  <thead class="thead-dark text-center">
+  <tr>
+    <th class="align-middle">Application Name</th>
+    <th class="align-middle">Log Level</th>
+    <th class="align-middle">Duration</th>
+    <th class="align-middle">Limit</th>
+    <th class="align-middle" colspan="2">Callback</th>
+    <th class="align-middle" colspan="2">Action</th>
+  </tr>
+  </thead>
   <tbody>
   <% @alerts.each do |alert| %>
     <tr>
@@ -27,15 +25,14 @@
       <td class="align-middle"><%= alert.duration %> </td>
       <td class="align-middle"><%= alert.limit %> </td>
       <td class="align-middle"><%= JSON.parse(alert.callback)["type"] %> </td>
-      <td class="align-middle" >
+      <td class="align-middle">
         <% JSON.parse(alert.callback)["receivers"].each do |item| %>
           <ul>
             <li class="text-truncate"> <%= item %> </li>
           </ul>
         <% end %> </td>
 
-      <td class="align-middle" >
-        <%#= link_to 'Edit', edit_alert_path(alert) %>
+      <td class="align-middle">
         <%= link_to edit_alert_path(alert) do %>
           <button class="btn btn-primary" aria-label="vote up">
             <span class="glyphicon glyphicon-pencil"></span> Edit
@@ -43,7 +40,7 @@
         <% end %>
       </td>
 
-      <td class="align-middle" >
+      <td class="align-middle">
         <%= link_to alert, method: :delete, data: {confirm: 'Are you sure?'} do %>
           <button class="btn btn-danger" aria-label="vote up">
             <span class="glyphicon glyphicon-trash"></span> Destroy
@@ -55,5 +52,86 @@
   <% end %>
   </tbody>
 </table>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <%= form_tag :action => 'create' do %>
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New Alert</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!--app name !-->
+        <div class="modal-body row">
+          <div class="offset-1 col-4">
+            <label for="app_name"> Application Name </label>
+          </div>
+          <div class="col-7 d-flex">
+            <%= text_field_tag 'app_name', nil, size: 30 %>
+          </div>
+        </div>
+
+        <!--log level !-->
+        <div class="modal-body row">
+          <div class="offset-1 col-4">
+            <label for="log_level"> Log Level </label>
+          </div>
+          <div class="col-7 d-flex">
+            <%= select '', 'log_level', [['Error', 'error'], ['Debug', 'debug'],
+                                         ['Fatal', 'fatal'], ['Info', 'info'],
+                                         ['Trace', 'trace'], ['Warn', 'warn']] %>
+          </div>
+        </div>
+
+        <!--duration !-->
+        <div class="modal-body row">
+          <div class="offset-1 col-4">
+            <label for="duration"> Duration </label>
+          </div>
+          <div class="col-7 d-flex">
+            <%= text_field  '','duration', size: 30 %>
+          </div>
+        </div>
+
+        <!--limit !-->
+        <div class="modal-body row">
+          <div class="offset-1 col-4">
+            <label for="limit"> Limit </label>
+          </div>
+          <div class="col-7 d-flex">
+            <%= text_field '', 'limit', size: 30 %>
+          </div>
+        </div>
+
+        <!--callback !-->
+        <div class="modal-body row">
+          <div class="offset-1 col-4">
+            <label for="callback"> Callback </label>
+          </div>
+          <div class="col-7 d-flex">
+            <%= select '', 'callback', [['Email', 'email'],
+                                        ['Slack', 'slack']], include_blank: true %>
+
+            <div id="add_email_receiver" style="display: none"> Add Receiver</div>
+            <div id="add_slack_webhook" style="display: none"> Add Webhook</div>
+          </div>
+        </div>
+
+        <div class="modal-body row">
+          <div class="offset-1 col-8">
+            <div id="callback_form"></div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <%= submit_tag "Create", class: "btn btn-primary" %>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
 
 
