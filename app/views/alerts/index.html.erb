@@ -22,7 +22,12 @@
     <tr>
       <td class="align-middle"><%= alert.app_name %> </td>
       <td class="align-middle"><%= alert.log_level %> </td>
-      <td class="align-middle"><%= alert.duration %> </td>
+      <% @hour = alert.duration / 3600 %>
+      <% alert.duration = alert.duration % 3600 %>
+      <% @minute = alert.duration / 60 %>
+      <% alert.duration = alert.duration % 60 %>
+      <% @second = alert.duration %>
+      <td class="align-middle"><%= @hour.to_s + "H " + @minute.to_s + "M " + @second.to_s + "S" %> </td>
       <td class="align-middle"><%= alert.limit %> </td>
       <td class="align-middle"><%= JSON.parse(alert.callback)["type"] %> </td>
       <td class="align-middle">
@@ -91,7 +96,7 @@
             <label for="duration"> Duration </label>
           </div>
           <div class="col-7 d-flex">
-            <%= text_field  '','duration', size: 30 %>
+            <%= text_field '', 'duration', size: 30 %>
           </div>
         </div>
 
