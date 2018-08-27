@@ -4,6 +4,8 @@
 
 $(document).on 'turbolinks:load', ->
 
+  cdd = new CSSC
+
   $('#callback').on 'change', (e) ->
     slackButton = document.getElementById("add_slack_webhook")
     emailButton = document.getElementById("add_email_receiver")

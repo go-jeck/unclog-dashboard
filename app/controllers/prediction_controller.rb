@@ -1,21 +1,16 @@
-# frozen_string_literal: true
+class PredictionController < ApplicationController
+  helper_method :options_prediction, :node_id, :log_level
 
-class LogMetricsController < ApplicationController
-  before_action :set_log_metric, only: %i[show edit update destroy]
-
-  # GET /log_metrics
-  # GET /log_metrics.json
-  def index
-    x_axis = LogMetric.select("date_trunc('minutes', timestamp) as time").group('time').order('time').pluck("date_trunc('minutes', timestamp) as time")
-    labels = LogMetric.distinct.pluck(:log_level)
+  def log_metric_prediction
+    x_axis = LogMetricPrediction.distinct.pluck(:timestamp)
+    labels = LogMetricPrediction.distinct.pluck(:log_level)
 
     datasets = []
 
     labels.each do |label|
       color = random_color
-      quantities = LogMetric.select('quantity').where(log_level: label).pluck('quantity')
+      quantities = LogMetricPrediction.select('quantity').where(log_level: label).pluck('quantity')
       items = []
-
 
       if quantities.length < x_axis.length then
         diff = x_axis.length - quantities.length
@@ -56,7 +51,7 @@ class LogMetricsController < ApplicationController
       },
       scales: {
         xAxes: [{
-          display: true,
+          display: false,
           scaleLabel: {
             display: true,
             labelString: 'Time'
@@ -73,6 +68,37 @@ class LogMetricsController < ApplicationController
     }
   end
 
+  def options_prediction
+    app_name = LogMetricPrediction.distinct.pluck(:app_name, :node_id, :log_level)
+
+    mapping_prediction = Hash.new { |hsh, key| hsh[key] = [] }
+    # #using multiple map
+    app_name.each do |items|
+      mapping_prediction[items[0]].push items[1], items[2]
+    end
+    mapping_prediction
+  end
+
+  def node_id(application_name)
+    arr_node_id = Set.new
+    options_prediction[application_name].each do |node|
+      if node.length.even?
+        arr_node_id.add(node)
+      end
+    end
+    arr_node_id
+  end
+
+  def log_level(application_name, node_id_name)
+    log_level = []
+    options_prediction[application_name].each do |log|
+      if log.length.odd?
+        log_level.push(log)
+      end
+    end
+    log_level
+  end
+
   def random_color
     'rgba(' + String(generate_number) + ',' + String(generate_number) + ',' + String(generate_number) + ', 1)'
   end
@@ -81,11 +107,13 @@ class LogMetricsController < ApplicationController
     rand(0...255)
   end
 
-  private
+  def moving_avg(data, duration, round)
+    data.each_cons(duration).map { |sma| sma.reduce(&:+).fdiv(duration).round(round) }
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_log_metric
-    @log_metric = LogMetric.find(params[:id])
+    @log_metric = LogMetricPrediction.find(params[:id])
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

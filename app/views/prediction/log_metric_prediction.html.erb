@@ -1,0 +1,8 @@
+<h1>Prediction</h1>
+
+<%= select_tag "node_list", options_for_select(node_id('go-pay')) %>
+<%= select_tag "node_level", options_for_select(log_level('go-ride','dw')) %>
+
+<div class="chart-container">
+  <%= line_chart @data, @options %>
+</div>

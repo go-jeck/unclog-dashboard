@@ -19,7 +19,7 @@ class AlertsController < ApplicationController
 
   # GET /alerts/1/edit
   def edit
-    logger.info ("Asdasd")
+    logger.info("Asdasd")
     @alert = Alert.find(params[:id])
 
     duration = @alert.duration.to_i

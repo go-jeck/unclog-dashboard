@@ -27,7 +27,7 @@
       <% @minute = alert.duration / 60 %>
       <% alert.duration = alert.duration % 60 %>
       <% @second = alert.duration %>
-      <td class="align-middle"><%= @hour.to_s + "H " + @minute.to_s + "M " + @second.to_s + "S" %> </td>
+      <td class="align-middle"><%= @hour.to_s + ":" + @minute.to_s + ":" + @second.to_s %> </td>
       <td class="align-middle"><%= alert.limit %> </td>
       <td class="align-middle"><%= JSON.parse(alert.callback)["type"] %> </td>
       <td class="align-middle">
