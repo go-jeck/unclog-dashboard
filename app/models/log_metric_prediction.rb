@@ -1,3 +1,3 @@
 class LogMetricPrediction < ApplicationRecord
-  self.table_name = "log_metrics_v4"
+  self.table_name = "log_metrics_v2"
 end

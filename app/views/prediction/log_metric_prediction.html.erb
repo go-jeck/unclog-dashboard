@@ -1,8 +1,132 @@
 <h1>Prediction</h1>
 
-<%= select_tag "node_list", options_for_select(node_id('go-pay')) %>
-<%= select_tag "node_level", options_for_select(log_level('go-ride','dw')) %>
+<div id="app_form">
+  <select name="app_name" v-model="app_name" v-on:change="updateNodeList" >
+    <option value="" selected="selected">Make a choice</option>
+    <option v-for="app in app_names" > {{ app.name }}</option>
+  </select>
+
+  <select name="node_id" v-model="node_id" v-on:change="updateLogLevelList">
+    <option value="" selected="selected">Make a choice</option>
+    <option v-for="node in node_ids" > {{ node.node_id }}</option>
+  </select>
+
+  <select name="log_level" v-model="log_level" v-on:change="updateChart">
+    <option value="" selected="selected">Make a choice</option>
+    <option v-for="log_level in log_levels" > {{ log_level }}</option>
+  </select>
+</div>
 
 <div class="chart-container">
   <%= line_chart @data, @options %>
 </div>
+
+
+<script type="text/javascript">
+    app_form = new Vue({
+        el: '#app_form',
+        data: {
+            app_options: null,
+            app_names: [],
+            node_ids: [],
+            log_levels: [],
+            app_name: '',
+            node_id: '',
+            log_level: '',
+            chart_data: null,
+        },
+        mounted() {
+            this.getAllAppOptions()
+        },
+        methods: {
+            async getAllAppOptions() {
+                await axios.get('/app_options').then(result => {
+                    this.app_options = result.data
+                    this.setDistinct()
+                })
+            },
+            isAppNameExists(app_name) {
+                for (let i = 0; i < this.app_names.length; i++) {
+                    if (this.app_names[i].name === app_name) {
+                        return this.app_names[i]
+                    }
+                }
+
+                return false
+            },
+            isNodeIsExists(app, node_id) {
+                for (let i = 0; i < app.node_ids.length; i++) {
+                    if (app.node_ids[i].node_id === node_id) {
+                        return app.node_ids[i]
+                    }
+                }
+
+                return false
+            },
+            updateNodeList() {
+                this.app_names.forEach(item => {
+                    if(item.name === this.app_name) {
+                        this.node_ids = item.node_ids
+                    }
+                })
+            },
+            updateLogLevelList() {
+                this.app_names.forEach(item => {
+                    if(item.name === this.app_name) {
+                        item.node_ids.forEach(node => {
+                            if(node.node_id === this.node_id) {
+                                this.log_levels = node.log_levels
+                            }
+                        })
+                    }
+                })
+            },
+            setDistinct() {
+                this.app_options.forEach(item => {
+                    let app = this.isAppNameExists(item.app_name)
+
+                    if (!app) {
+                        this.app_names.push({
+                            "name": item.app_name,
+                            "node_ids": [
+                                {
+                                    "node_id": item.node_id,
+                                    "log_levels": [item.log_level]
+                                }
+                            ],
+                        })
+                    } else {
+                        let node = this.isNodeIsExists(app, item.node_id)
+
+                        if (!node) {
+                            app.node_ids.push({
+                                "node_id": item.node_id,
+                                "log_levels": []
+                            })
+                        } else {
+                            node.log_levels.push(item.log_level)
+                        }
+                    }
+                })
+
+                console.log(this.app_names)
+            },
+            async getChartData() {
+                axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                axios.post('/chartdata', {
+                    app_name: this.app_name,
+                    node_id: this.node_id,
+                    log_level: this.log_level
+                }).then(result => {
+                    this.chart_data = result.data
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            updateChart() {
+                this.getChartData()
+
+            }
+        }
+    })
+</script>

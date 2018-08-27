@@ -68,35 +68,14 @@ class PredictionController < ApplicationController
     }
   end
 
-  def options_prediction
-    app_name = LogMetricPrediction.distinct.pluck(:app_name, :node_id, :log_level)
-
-    mapping_prediction = Hash.new { |hsh, key| hsh[key] = [] }
-    # #using multiple map
-    app_name.each do |items|
-      mapping_prediction[items[0]].push items[1], items[2]
-    end
-    mapping_prediction
+  def app_options
+    all_app_combinations = LogMetricPrediction.select(:app_name, :node_id, :log_level).distinct.order(:app_name, :node_id, :log_level).as_json(:except => :id)
+    render json: all_app_combinations
   end
 
-  def node_id(application_name)
-    arr_node_id = Set.new
-    options_prediction[application_name].each do |node|
-      if node.length.even?
-        arr_node_id.add(node)
-      end
-    end
-    arr_node_id
-  end
-
-  def log_level(application_name, node_id_name)
-    log_level = []
-    options_prediction[application_name].each do |log|
-      if log.length.odd?
-        log_level.push(log)
-      end
-    end
-    log_level
+  def chart_data
+    data = LogMetricPrediction.select('*').where(:app_name => params['app_name'], :node_id => params['node_id'], :log_level => params['log_level'])
+    render json: data
   end
 
   def random_color
