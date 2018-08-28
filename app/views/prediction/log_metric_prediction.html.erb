@@ -7,7 +7,7 @@
   </select>
 
   <select name="node_id" v-model="node_id" v-on:change="updateLogLevelList">
-    <option value="" selected="selected">Make a choice</option>
+    <option ref="default_node" value="" selected="selected">Make a choice</option>
     <option v-for="node in node_ids" > {{ node.node_id }}</option>
   </select>
 
@@ -106,8 +106,11 @@
                         this.node_ids = item.node_ids
                     }
                 })
+
+                this.node_id = ''
             },
             updateLogLevelList() {
+                 this.log_level = ''
                 this.app_names.forEach(item => {
                     if(item.name === this.app_name) {
                         item.node_ids.forEach(node => {
@@ -117,6 +120,8 @@
                         })
                     }
                 })
+
+
             },
             setDistinct() {
                 this.app_options.forEach(item => {
@@ -138,7 +143,7 @@
                         if (!node) {
                             app.node_ids.push({
                                 "node_id": item.node_id,
-                                "log_levels": []
+                                "log_levels": [item.log_level]
                             })
                         } else {
                             node.log_levels.push(item.log_level)
