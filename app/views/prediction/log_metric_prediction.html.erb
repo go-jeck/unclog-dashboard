@@ -11,18 +11,55 @@
     <option v-for="node in node_ids" > {{ node.node_id }}</option>
   </select>
 
-  <select name="log_level" v-model="log_level" v-on:change="updateChart">
+    <select name="log_level" v-model="log_level" v-on:change="getChartData">
     <option value="" selected="selected">Make a choice</option>
     <option v-for="log_level in log_levels" > {{ log_level }}</option>
   </select>
-</div>
 
-<div class="chart-container">
-  <%= line_chart @data, @options %>
+  <line-chart ref="diagram"/>
 </div>
-
 
 <script type="text/javascript">
+    Vue.component('line-chart', {
+        extends: VueChartJs.Line,
+        mounted () {
+            this.renderChart({
+                labels: [],
+                datasets: [
+                    {
+                        label: '',
+                        backgroundColor: '#ff72fb',
+                        data: []
+                    }
+                ]
+            }, {responsive: true, maintainAspectRatio: false})
+        },
+        methods: {
+            update(data) {
+                console.log(data)
+                let labels = []
+                let dots = []
+
+                data.forEach(item => {
+                    labels.push(item.timestamp)
+                    dots.push(item.quantity)
+                })
+
+                this.renderChart({
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: data[0].app_name,
+                            backgroundColor: '#ff72fb',
+                            data: dots,
+                        }
+                    ]
+                }, {responsive: true, maintainAspectRatio: false})
+            }
+        }
+
+    })
+
     app_form = new Vue({
         el: '#app_form',
         data: {
@@ -108,25 +145,24 @@
                         }
                     }
                 })
-
-                console.log(this.app_names)
             },
             async getChartData() {
                 axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                let data = []
+
                 axios.post('/chartdata', {
                     app_name: this.app_name,
                     node_id: this.node_id,
                     log_level: this.log_level
                 }).then(result => {
                     this.chart_data = result.data
+                    this.$refs.diagram.update(this.chart_data)
                 }).catch(err => {
                     console.log(err)
                 })
-            },
-            updateChart() {
-                this.getChartData()
 
-            }
+                return data
+            },
         }
     })
 </script>
